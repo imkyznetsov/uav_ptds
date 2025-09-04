@@ -48,12 +48,23 @@ def base_motion(t: np.ndarray) -> Dict[str, np.ndarray]:
                 altitude=altitude, speed=speed, temperature=temp,
                 pitch=pitch, roll=roll, heading=heading)
     
-    #подшумим сигналы
+    #подшумим сигналы - траектория + шум
 def add_sensors_noise(signals: Dict[str, np.ndarray], cfg: SimConfig) -> Dict[str, np.ndarray]:
     s = signals.copy()
+    # accels
     s["ax"] = s["ax"] + np.random.normal(0, cfg.accel_sigma, len(s["ax"]))
     s["ay"] = s["ay"] + np.random.normal(0, cfg.accel_sigma, len(s["ay"]))
     s["az"] = s["az"] + np.random.normal(0, cfg.accel_sigma, len(s["az"]))
+    # gyros
     s["p"] = s["p"] + np.random.normal(0, cfg.gyro_sigma, len(s["p"]))
     s["q"] = s["q"] + np.random.normal(0, cfg.gyro_sigma, len(s["q"]))
     s["r"] = s["r"] + np.random.normal(0, cfg.gyro_sigma, len(s["r"]))
+    # baro
+    s["baro_alt"] = s["altitude"] + np.random.normal(0, cfg.baro_sigma, len(s["altitude"]))
+    # magn
+    s["mag_x"] = np.cos(s["heading"]) + np.random.normal(0, cfg.mag_sigma, len(s["heading"]))
+    s["mag_y"] = np.sin(s["heading"]) + np.random.normal(0, cfg.mag_sigma, len(s["heading"]))
+    s["mag_z"] = 0.1 + np.random.normal(0, cfg.mag_sigma, len(s["heading"]))
+    # GNSS
+
+
