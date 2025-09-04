@@ -10,6 +10,7 @@ class SimConfig:
     gnss_rate_hz: int = 10
     baro_sigma: float = 0.5
     mag_sigma: float = 0.2
+    fs: int = 100
     
 FAILURE_TYPES = [
     # аксы
@@ -66,5 +67,17 @@ def add_sensors_noise(signals: Dict[str, np.ndarray], cfg: SimConfig) -> Dict[st
     s["mag_y"] = np.sin(s["heading"]) + np.random.normal(0, cfg.mag_sigma, len(s["heading"]))
     s["mag_z"] = 0.1 + np.random.normal(0, cfg.mag_sigma, len(s["heading"]))
     # GNSS
+    gnss_t = np.arange(0, len(s["ax"])) / cfg.fs
+    gnss_step = int(cfg.fs / cfg.gnss_rate_hz)
+    indices = np.arange(0, len(gnss_t), gnss_step)
+    gnss_alt = s["altitude"][indices] + np.random.normal(0, 1.5, len(indices))
+    gnss_spd = (s["speed"][indices] + np.random.normal(0, 0.3, len(indices)))
+    gnss_ok = np.ones_like(indices, dtype=int)
+    # синхронизируем
+    s["gnss_alt"] = np.repeat(gnss_alt, gnss_step)[:len(gnss_t)]
+    s["gnss_speed"] = np.repeat(gnss_spd, gnss_step)[:len(gnss_t)]
+    s["gnss_ok"] = np.repeat(gnss_ok, gnss_step)[:len(gnss_t)]
+    return s
+
 
 
