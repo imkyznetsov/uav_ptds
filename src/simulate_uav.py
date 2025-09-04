@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple, List
 import numpy as np
 import pandas as pd
 from dataclasses import dataclass
@@ -13,6 +13,10 @@ class SimConfig:
     mag_sigma: float = 0.2
     fs: int = 100
     horizon_s: int = 20
+    seed: int = 13
+    flight_s: int = 600
+    n_flights: int = 300
+    failure_rate: float = 0.45    
     
 FAILURE_TYPES = [
     # аксы
@@ -185,5 +189,3 @@ def generate_dataset(output_dir="data/raw", cfg=SimConfig()):
         meta.append({"flight_id": i, "failure_type": df["failure_type"].iloc[0]})
     pd.DataFrame(meta).to_csv(os.path.join(output_dir, "meta.csv"), index=False)
     print(f"Generated {cfg.n_flights} flights in {output_dir}")
-
-
