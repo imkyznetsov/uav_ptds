@@ -49,6 +49,11 @@ def base_motion(t: np.ndarray) -> Dict[str, np.ndarray]:
                 pitch=pitch, roll=roll, heading=heading)
     
     #подшумим сигналы
-def add_sensors_noise(signals: Dict[str, np.ndarray], cfg: SimConfig) -> Dict[str, np.ndarray]
+def add_sensors_noise(signals: Dict[str, np.ndarray], cfg: SimConfig) -> Dict[str, np.ndarray]:
     s = signals.copy()
     s["ax"] = s["ax"] + np.random.normal(0, cfg.accel_sigma, len(s["ax"]))
+    s["ay"] = s["ay"] + np.random.normal(0, cfg.accel_sigma, len(s["ay"]))
+    s["az"] = s["az"] + np.random.normal(0, cfg.accel_sigma, len(s["az"]))
+    s["p"] = s["p"] + np.random.normal(0, cfg.gyro_sigma, len(s["p"]))
+    s["q"] = s["q"] + np.random.normal(0, cfg.gyro_sigma, len(s["q"]))
+    s["r"] = s["r"] + np.random.normal(0, cfg.gyro_sigma, len(s["r"]))
