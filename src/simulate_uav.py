@@ -1,3 +1,4 @@
+from typing import Dict
 import numpy as np
 import pandas as pd
 from dataclasses import dataclass
@@ -46,3 +47,8 @@ def base_motion(t: np.ndarray) -> Dict[str, np.ndarray]:
     return dict(ax=ax, ay=ay, az=az, p=p, q=q, r=r,
                 altitude=altitude, speed=speed, temperature=temp,
                 pitch=pitch, roll=roll, heading=heading)
+    
+    #подшумим сигналы
+def add_sensors_noise(signals: Dict[str, np.ndarray], cfg: SimConfig) -> Dict[str, np.ndarray]
+    s = signals.copy()
+    s["ax"] = s["ax"] + np.random.normal(0, cfg.accel_sigma, len(s["ax"]))
