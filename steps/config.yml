@@ -1,0 +1,13 @@
+data:
+  raw_dir: data/raw
+  features_path: data/processed/features.parquet
+
+params:
+  seed: 13
+  n_flights: 300
+  fs: 100
+  window_s: 5
+  overlap: 0.5
+
+mlflow:
+  experiment: uav_failure_pred
