@@ -1,0 +1,11 @@
+numpy
+pandas
+scipy
+scikit-learn
+lightgbm
+mlflow
+pyarrow
+fastapi
+uvicorn[standard]
+evidently
+pyyaml

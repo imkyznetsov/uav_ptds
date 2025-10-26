@@ -1,0 +1,22 @@
+stages:
+  generate:
+    cmd: python -c "from src.simulate_uav import generate_dataset; generate_dataset('data/raw')"
+    deps:
+      - src/simulate_uav.py
+    outs:
+      - data/raw
+  features:
+    cmd: python -c "from steps.clean import Cleaner; from steps.features import FeatureBuilder; import pandas as pd; import os; cl=Cleaner(); df=cl.clean(cl.concat_raw('data/raw')); fb=FeatureBuilder(out_path='data/processed/features.parquet'); fb.transform(df)"
+    deps:
+      - steps/clean.py
+      - steps/features.py
+      - data/raw
+    outs:
+      - data/processed/features.parquet
+  train:
+    cmd: MLFLOW_TRACKING_URI="file:./mlruns" python -c "from steps.train import Trainer; tr=Trainer(); df=tr.load(); tr.train_cv(df)"
+    deps:
+      - steps/train.py
+      - data/processed/features.parquet
+    outs:
+      - mlruns
