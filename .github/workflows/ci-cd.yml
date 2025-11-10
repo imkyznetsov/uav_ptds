@@ -23,20 +23,20 @@ jobs:
         run: |
           python -c "from src.simulate_uav import generate_dataset; generate_dataset('data/raw')"
           python - <<'PY'
-from steps.clean import Cleaner
-from steps.features import FeatureBuilder
-import pandas as pd
-cl=Cleaner()
-df=cl.clean(cl.concat_raw('data/raw'))
-fb=FeatureBuilder(out_path='data/processed/features.parquet')
-fb.transform(df)
-PY
+          from steps.clean import Cleaner
+          from steps.features import FeatureBuilder
+          import pandas as pd
+          cl=Cleaner()
+          df=cl.clean(cl.concat_raw('data/raw'))
+          fb=FeatureBuilder(out_path='data/processed/features.parquet')
+          fb.transform(df)
+          PY
           python - <<'PY'
-from steps.train import Trainer
-tr=Trainer()
-df=tr.load()
-tr.train_cv(df)
-PY
+          from steps.train import Trainer
+          tr=Trainer()
+          df=tr.load()
+          tr.train_cv(df)
+          PY
       - name: Upload mlruns
         uses: actions/upload-artifact@v4
         with:
